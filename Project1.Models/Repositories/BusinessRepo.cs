@@ -69,16 +69,22 @@ namespace Project1.Models.Repositories
 
         public async Task<bool> Transfer(int idFrom, int idTo, decimal amount)
         {
-            BusinessAccount bAccountFrom = await _context.BusinessAccounts.FindAsync(idFrom);
-            BusinessAccount bAccountTo = await _context.BusinessAccounts.FindAsync(idTo);
+            try
+            {
+                BusinessAccount bAccountFrom = await _context.BusinessAccounts.FindAsync(idFrom);
+                BusinessAccount bAccountTo = await _context.BusinessAccounts.FindAsync(idTo);
 
-            bAccountFrom.Balance -= amount;
-            bAccountTo.Balance += amount;
-            
-            _context.Update(bAccountFrom);
-            _context.Update(bAccountTo);
-            await _context.SaveChangesAsync();
-            return true;
+                bAccountFrom.Balance -= amount;
+                bAccountTo.Balance += amount;
+
+                _context.Update(bAccountFrom);
+                _context.Update(bAccountTo);
+                await _context.SaveChangesAsync();
+                return true;
+            } catch
+            {
+                throw;
+            }
         }
     }
 }

@@ -256,29 +256,33 @@ namespace Project1.UI.Controllers
 
             //return RedirectToAction(nameof(Index));
             var allAccounts = (await _repo.Get()).Where(b => b.UserId == userManager.GetUserId(User));
-            var accounts = allAccounts.Except(new List<BusinessAccount> { bAccount });
+            var openAccounts = allAccounts.Where(b => !b.IsClosed);
+            var accounts = openAccounts.Except(new List<BusinessAccount> { bAccount });
             return View(new TransferVM { Accounts = accounts, AccountIDFrom = (int)id });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Transfer(int id, [Bind("AccountIDFrom, AccountIDTo, Amount")] TransferVM transferVM)
+        public async Task<IActionResult> Transfer(int id, [Bind("AccountIDTo, Amount")] TransferVM transferVM)
         {
-            //transferVM.Accounts = new List<Account>();
-            //if (ModelState.IsValid)
-            //{
+            if (ModelState.IsValid)
+            {
                 try
                 {
                     await _repo.Transfer(id, transferVM.AccountIDTo, transferVM.Amount);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch //(DbUpdateConcurrencyException)
                 {
                     if (!BusinessAccountExists(id))
                     {
                         return NotFound();
-                    } else if (!BusinessAccountExists(transferVM.AccountIDFrom))
+                    } else if (!BusinessAccountExists(transferVM.AccountIDTo))
                     {
-                        return NotFound();
+                        var aA = (await _repo.Get()).Where(b => b.UserId == userManager.GetUserId(User));
+                        var a = aA.Except(new List<BusinessAccount> { await _repo.Get(id) });
+                        transferVM.Accounts = a;
+                        transferVM.AccountIDFrom = (int)id;
+                        return View(transferVM);// NotFound();
                     }
                     else
                     {
@@ -286,8 +290,12 @@ namespace Project1.UI.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            //}
-            //return View(transferVM);
+            }
+            var allAccounts = (await _repo.Get()).Where(b => b.UserId == userManager.GetUserId(User));
+            var accounts = allAccounts.Except(new List<BusinessAccount> { await _repo.Get(id) });
+            transferVM.Accounts = accounts;
+            transferVM.AccountIDFrom = (int)id;
+            return View(transferVM);
         }
 
 
