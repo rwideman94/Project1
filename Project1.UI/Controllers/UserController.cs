@@ -6,27 +6,31 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Project1.UI.ViewModels;
 using Project1.Models;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Project1.UI.Controllers
 {
-    public class AccountController : Controller
+    public class UserController : Controller
     {
 
         private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
 
-        public AccountController(UserManager<AppUser> userManager,
+        public UserController(UserManager<AppUser> userManager,
                                   SignInManager<AppUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
 
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterVM model)
         {
             if (ModelState.IsValid)
@@ -63,11 +67,13 @@ namespace Project1.UI.Controllers
             return RedirectToAction("index", "home");
         }
 
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM model)
         {

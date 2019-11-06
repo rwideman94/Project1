@@ -12,6 +12,11 @@ using Microsoft.Extensions.Hosting;
 using Project1.Models;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Project1.Models.Repositories;
 
 namespace Project1.UI
 {
@@ -32,8 +37,21 @@ namespace Project1.UI
                    Configuration.GetConnectionString("Project1DbContext")));
             services.AddControllersWithViews();
             services.AddIdentity<AppUser, IdentityRole>()
+                //.AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<Project1DbContext>();
-            
+
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/User/Login");
+
+            services.AddTransient<IBusinessRepo, BusinessRepo>();
+
+            services.AddControllers(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                 .RequireAuthenticatedUser()
+                                 .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
