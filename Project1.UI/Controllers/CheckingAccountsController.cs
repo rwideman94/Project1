@@ -29,7 +29,7 @@ namespace Project1.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CheckingAccounts.Where(a => a.UserId == userManager.GetUserId(User)).ToListAsync());
+            return View(await _context.CheckingAccounts.Where(a => a.AppUserId == userManager.GetUserId(User)).ToListAsync());
         }
 
         // GET: CheckingAccounts/Details/5
@@ -63,7 +63,7 @@ namespace Project1.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,Balance,InterestRate,IsClosed,DateCreated,NickName")] CheckingAccount checkingAccount)
         {
-            checkingAccount.UserId = userManager.GetUserId(User);
+            checkingAccount.AppUserId = userManager.GetUserId(User);
             checkingAccount.DateCreated = DateTime.Now;
             checkingAccount.InterestRate = defaultInterestRate;
             if (ModelState.IsValid)

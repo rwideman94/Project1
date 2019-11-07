@@ -6,13 +6,9 @@ namespace Project1.Models.Transactions
 {
     public abstract class Transaction
     {
+        public int Id { get; set; }
         public DateTime TransTime { get; set; }
-        public int AccountID { get; set; }
         public decimal Amount { get; set; }
-
-        public Transaction()
-        {
-            TransTime = DateTime.Now;
-        }
+        public string Details { get; set; }
     }
 }

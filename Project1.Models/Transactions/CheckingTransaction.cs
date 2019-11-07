@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Project1.Models.Transactions
 {
-    public class Deposit : Transaction
+    public class CheckingTransaction : Transaction 
     {
+        public int CheckingAccountID { get; set; }
     }
 }

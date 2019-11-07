@@ -28,7 +28,7 @@ namespace Project1.Models
         public string State { get; set; }
 
         public List<BusinessAccount> BAccounts { get; set; }// = new List<BusinessAccount>();
-        //public List<CheckingAccount> CAccounts { get; set; } = new List<CheckingAccount>();
+        public List<CheckingAccount> CAccounts { get; set; }// = new List<CheckingAccount>();
         //public List<Loan> Loans { get; set; } = new List<Loan>();
         //public List<TermDeposit> TermDeposits { get; set; } = new List<TermDeposit>();
     }

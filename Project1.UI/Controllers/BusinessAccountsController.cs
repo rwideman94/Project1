@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Project1.Models;
 using Project1.Models.Accts;
 using Project1.Models.Repositories;
+using Project1.Models.Transactions;
 using Project1.UI.ViewModels;
 
 namespace Project1.UI.Controllers
@@ -31,7 +32,7 @@ namespace Project1.UI.Controllers
         
         public async Task<IActionResult> Index()
         {
-            return View((await _repo.Get()).Where<BusinessAccount>(b => b.UserId == userManager.GetUserId(User)));
+            return View((await _repo.Get()).Where<BusinessAccount>(b => b.AppUserId == userManager.GetUserId(User)));
         }
 
         // GET: BusinessAccounts/Details/5
@@ -47,8 +48,12 @@ namespace Project1.UI.Controllers
             {
                 return NotFound();
             }
-
-            return View(businessAccount);
+            var transactions = await _repo.GetTransactions();
+            var acctTransactions = transactions.Where(acct => acct.BusinessAccountID == id);
+            var revAcctTrans = acctTransactions.Reverse();
+            List<BusinessTransaction> last10 = revAcctTrans.Take(10).ToList();
+            BusinessAccountVM bavm = new BusinessAccountVM { Account = businessAccount, Transactions = last10 };
+            return View(bavm);
         }
 
         // GET: BusinessAccounts/Create
@@ -64,7 +69,7 @@ namespace Project1.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,Balance,InterestRate,IsClosed,DateCreated,NickName")] BusinessAccount businessAccount)
         {
-            businessAccount.UserId = userManager.GetUserId(User);
+            businessAccount.AppUserId = userManager.GetUserId(User);
             businessAccount.DateCreated = DateTime.Now;
             businessAccount.InterestRate = defaultInterestRate;
             if (ModelState.IsValid)
@@ -255,16 +260,19 @@ namespace Project1.UI.Controllers
 
 
             //return RedirectToAction(nameof(Index));
-            var allAccounts = (await _repo.Get()).Where(b => b.UserId == userManager.GetUserId(User));
+            var allAccounts = await _repo.Get(userManager.GetUserId(User));
             var openAccounts = allAccounts.Where(b => !b.IsClosed);
-            var accounts = openAccounts.Except(new List<BusinessAccount> { bAccount });
-            return View(new TransferVM { Accounts = accounts, AccountIDFrom = (int)id });
+            var validAccounts = openAccounts.Except(new List<BusinessAccount> { bAccount });
+            return View(new TransferVM { Accounts = validAccounts, AccountIDFrom = (int)id });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Transfer(int id, [Bind("AccountIDTo, Amount")] TransferVM transferVM)
         {
+            var allAccounts = await _repo.Get(userManager.GetUserId(User));
+            var openAccounts = allAccounts.Where(b => !b.IsClosed);
+            var validAccounts = openAccounts.Except(new List<BusinessAccount> { await _repo.Get(id)});
             if (ModelState.IsValid)
             {
                 try
@@ -278,9 +286,7 @@ namespace Project1.UI.Controllers
                         return NotFound();
                     } else if (!BusinessAccountExists(transferVM.AccountIDTo))
                     {
-                        var aA = (await _repo.Get()).Where(b => b.UserId == userManager.GetUserId(User));
-                        var a = aA.Except(new List<BusinessAccount> { await _repo.Get(id) });
-                        transferVM.Accounts = a;
+                        transferVM.Accounts = validAccounts;
                         transferVM.AccountIDFrom = (int)id;
                         return View(transferVM);// NotFound();
                     }
@@ -291,9 +297,7 @@ namespace Project1.UI.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            var allAccounts = (await _repo.Get()).Where(b => b.UserId == userManager.GetUserId(User));
-            var accounts = allAccounts.Except(new List<BusinessAccount> { await _repo.Get(id) });
-            transferVM.Accounts = accounts;
+            transferVM.Accounts = validAccounts;
             transferVM.AccountIDFrom = (int)id;
             return View(transferVM);
         }

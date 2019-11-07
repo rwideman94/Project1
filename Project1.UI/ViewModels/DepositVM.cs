@@ -12,7 +12,7 @@ namespace Project1.UI.ViewModels
         [Required]
         [DataType(DataType.Currency)]
         [Range(0,Double.MaxValue, ErrorMessage="You can't deposit a negative amount.")]
-        [Display(Name = "Withdrawl Amount")]
+        [Display(Name = "Deposit Amount")]
         public decimal Amount { get; set; }
     }
 }

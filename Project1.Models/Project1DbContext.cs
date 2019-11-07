@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Project1.Models.Accts;
+using Project1.Models.Transactions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,15 +30,12 @@ namespace Project1.Models
 
         public DbSet<BusinessAccount> BusinessAccounts { get; set; }
         public DbSet<CheckingAccount> CheckingAccounts { get; set; }
+        //public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<BusinessTransaction> BusinessTransactions { get; set; }
+        public DbSet<CheckingTransaction> CheckingTransactions { get; set; }
+        
         //public DbSet<Loan> Loans{ get; set; }
         //public DbSet<TermDeposit> TermDeposits { get; set; }
-
-        //public DbSet<Deposit> Deposits { get; set; }
-        //public DbSet<DepositFromTermDeposit> FromTermDeposits  { get; set; }
-        //public DbSet<TransferIn> InTransfers { get; set; }
-        //public DbSet<TransferOut> OutTransfers { get; set; }
-        //public DbSet<WithdrawToLoan> LoanWithdrawls { get; set; }
-        //public DbSet<Withdrawl> Withdrawls { get; set; }
         //public DbSet<LoanPayment> LoanPayments { get; set; }
 
     }

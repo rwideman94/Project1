@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Project1.Models.Accts;
+using Project1.Models.Transactions;
 
 namespace Project1.Models.Repositories
 {
@@ -44,6 +45,8 @@ namespace Project1.Models.Repositories
             BusinessAccount businessAccount = await _context.BusinessAccounts.FindAsync(id);
             businessAccount.Balance += amount;
             _context.Update(businessAccount);
+            BusinessTransaction businessTransaction = new BusinessTransaction { BusinessAccountID = id, Amount = amount, TransTime = DateTime.Now, Details = $"Deposit of ${amount}" };
+            _context.Add(businessTransaction);
             await _context.SaveChangesAsync();
             return true;
         }
@@ -53,9 +56,14 @@ namespace Project1.Models.Repositories
             return await _context.BusinessAccounts.ToListAsync();
         }
 
+        public async Task<List<BusinessAccount>> Get(string userId)
+        {
+            return await _context.BusinessAccounts.Where(b => b.AppUserId == userId).ToListAsync();
+        }
+
         public async Task<BusinessAccount> Get(int? id)
         {
-            return await _context.BusinessAccounts.FirstOrDefaultAsync(m => m.Id == id);
+            return await _context.BusinessAccounts.FirstOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task<bool> Withdraw(int id, decimal amount)
@@ -85,6 +93,11 @@ namespace Project1.Models.Repositories
             {
                 throw;
             }
+        }
+
+        public async Task<List<BusinessTransaction>> GetTransactions()
+        {
+            return await _context.BusinessTransactions.ToListAsync();
         }
     }
 }

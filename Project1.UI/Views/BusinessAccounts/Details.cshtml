@@ -1,4 +1,4 @@
-﻿@model Project1.Models.Accts.BusinessAccount
+﻿@model Project1.UI.ViewModels.BusinessAccountVM
 
 @{
     ViewData["Title"] = "Details";
@@ -11,37 +11,73 @@
     <hr />
     <dl class="row">
         @*<dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
+                @Html.DisplayNameFor(model => model.UserId)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.UserId)
+            </dd>*@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.Balance)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>*@
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Balance)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Balance)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.Balance)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.InterestRate)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.InterestRate)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.InterestRate)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.InterestRate)
         </dd>
         @*<dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsClosed)
+                @Html.DisplayNameFor(model => model.IsClosed)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IsClosed)
+            </dd>*@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.DateCreated)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsClosed)
-        </dd>*@
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateCreated)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateCreated)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.DateCreated)
         </dd>
     </dl>
 </div>
+<h4>Last 10 Transactions</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Transaction Time
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Transaction Details
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Transactions)
+        {
+            if (item != null)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TransTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Amount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Details)
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
 <div>
     @*<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>*@
     <a asp-action="Index">Back to List</a>

@@ -9,7 +9,8 @@ namespace Project1.Models.Accts
     {
         [Display(Name = "Account ID")]
         public int Id { get; set; }
-        public string UserId { get; set; }
+        [Required]
+        public string AppUserId { get; set; }
         [Required]
         [StringLength(maximumLength:20,MinimumLength = 5)]
         [Display(Name = "Account Nickname")]
@@ -18,12 +19,9 @@ namespace Project1.Models.Accts
         [DisplayFormat(DataFormatString = "{0:P2}", ApplyFormatInEditMode = true)]
         [Display(Name = "Interest Rate")]
         public decimal InterestRate { get; set; }
-        //public bool isActive { get; set; } = true;
         public bool IsClosed { get; set; }
         [DataType(DataType.Date)]
         [Display(Name = "Creation Date")]
         public DateTime DateCreated { get; set; }
-        //public List<Transaction> transactions = new List<Transaction>();
-
     }
 }

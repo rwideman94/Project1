@@ -1,4 +1,5 @@
 ﻿using Project1.Models.Accts;
+using Project1.Models.Transactions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,8 @@ namespace Project1.Models.Repositories
     {
         Task<List<BusinessAccount>> Get();
         Task<BusinessAccount> Get(int? id);
+        Task<List<BusinessAccount>> Get(string userId);
+        Task<List<BusinessTransaction>> GetTransactions();
         Task<bool> Add(BusinessAccount businessAccount);
         Task<bool> Close(int id);
         Task<bool> Deposit(int id, decimal amount);
