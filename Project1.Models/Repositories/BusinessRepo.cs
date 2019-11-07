@@ -71,6 +71,8 @@ namespace Project1.Models.Repositories
             BusinessAccount businessAccount = await _context.BusinessAccounts.FindAsync(id);
             businessAccount.Balance -= amount;
             _context.Update(businessAccount);
+            BusinessTransaction businessTransaction = new BusinessTransaction { BusinessAccountID = id, Amount = amount, TransTime = DateTime.Now, Details = $"Withdrawl of ${amount}" };
+            _context.Add(businessTransaction);
             await _context.SaveChangesAsync();
             return true;
         }
@@ -87,6 +89,10 @@ namespace Project1.Models.Repositories
 
                 _context.Update(bAccountFrom);
                 _context.Update(bAccountTo);
+                BusinessTransaction businessTransactionFrom = new BusinessTransaction { BusinessAccountID = idFrom, Amount = amount, TransTime = DateTime.Now, Details = $"Transfer of ${amount} to account #{idTo}" };
+                _context.Add(businessTransactionFrom);
+                BusinessTransaction businessTransactionTo = new BusinessTransaction { BusinessAccountID = idTo, Amount = amount, TransTime = DateTime.Now, Details = $"Transfer of ${amount} from account #{idFrom}" };
+                _context.Add(businessTransactionTo);
                 await _context.SaveChangesAsync();
                 return true;
             } catch

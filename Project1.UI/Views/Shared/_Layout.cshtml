@@ -10,10 +10,12 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
+    <header style="background-color:#f42069">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Project1</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img alt="Capital None" src="https://pub-static.haozhaopian.net/assets/stickers/5976/d4af8548-ce24-4329-85d5-43a777627f43_medium_thumb.jpg" width="75" height="50">
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -28,11 +30,19 @@
                         </li>
                         @if (signInManager.IsSignedIn(User))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="BusinessAccounts" asp-action="Index">Business Accounts</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="CheckingAccounts" asp-action="Index">Checking Accounts</a>
+                            <li class="dropdown nav-item nav-link text-dark">
+                                <a class="dropdown-toggle" data-toggle="dropdown">
+                                    Accounts
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="BusinessAccounts" asp-action="Index">Business Accounts</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="CheckingAccounts" asp-action="Index">Checking Accounts</a>
+                                    </li>
+                                </ul>
                             </li>
                         }
                     </ul>
@@ -67,10 +77,9 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted" style="background-color:pink">
         <div class="container">
-            &copy; 2019 - Project1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - Piggy Bank Inc. - A subsidiary of Give Us your Money LLC. - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
