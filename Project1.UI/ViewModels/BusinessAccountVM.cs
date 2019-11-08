@@ -10,8 +10,7 @@ namespace Project1.UI.ViewModels
     public class BusinessAccountVM
     {
 
-        public BusinessAccount Account { get; set; }
-
+        public Account Account { get; set; }
         public List<BusinessTransaction> Transactions { get; set; }
     }
 }

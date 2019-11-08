@@ -1,0 +1,39 @@
+﻿@model List<Project1.Models.Transactions.BusinessTransaction>
+
+<!Doctype html>
+<body>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Transaction Time
+                </th>
+                <th>
+                    Amount
+                </th>
+                <th>
+                    Transaction Details
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                if (item != null)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TransTime)
+                        </td>
+                        <td>
+                            $@Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Details)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</body>

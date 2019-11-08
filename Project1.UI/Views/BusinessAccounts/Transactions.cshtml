@@ -1,0 +1,37 @@
+﻿@model Project1.UI.ViewModels.TransactionsVM
+
+@{
+    ViewData["Title"] = "Transactions";
+}
+
+<h1>Transactions</h1>
+
+<div class="col-md-4">
+    <form asp-action="Transactions">
+        <table>
+            <tr>
+                <td class="col-sm-10">
+                    <label asp-for="Start" class="control-label"></label>
+                    <input asp-for="Start" class="form-control" />
+                </td>
+                <td class="col-sm-10">
+                    <label asp-for="End" class="control-label"></label>
+                    <input asp-for="End" class="form-control" />
+                </td>
+                <td class="form-group col-sm-10">
+                    <br />
+                    <input type="submit" value="Search Between Dates" class="btn btn-primary" />
+                </td>
+            </tr>
+        </table>
+        <br />
+    </form>
+</div>
+
+<div>
+    @Html.Partial("../Shared/_TransactionList.cshtml", Model.Transactions)
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

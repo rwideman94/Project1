@@ -13,8 +13,8 @@
     <thead>
         <tr>
             @*<th>
-            @Html.DisplayNameFor(model => model.UserId)
-        </th>*@
+                    @Html.DisplayNameFor(model => model.UserId)
+                </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Id)
             </th>
@@ -33,8 +33,8 @@
             <th></th>
             <th></th>
             @*<th>
-            @Html.DisplayNameFor(model => model.IsClosed)
-        </th>*@
+                    @Html.DisplayNameFor(model => model.IsClosed)
+                </th>*@
         </tr>
     </thead>
     <tbody>
@@ -72,15 +72,16 @@
                 }
                 else
                 {
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
-            </td>
-            <td>
-                <a asp-action="Deposit" asp-route-id="@item.Id">Deposit</a> |
-                <a asp-action="Withdraw" asp-route-id="@item.Id">Withdraw</a> |
-                <a asp-action="Transfer" asp-route-id="@item.Id">Transfer</a> |
-                <a asp-action="Close" asp-route-id="@item.Id">Close</a>
-            </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
+                    <td>
+                        <a asp-action="Deposit" asp-route-id="@item.Id">Deposit</a> |
+                        <a asp-action="Withdraw" asp-route-id="@item.Id">Withdraw</a> |
+                        <a asp-action="Transfer" asp-route-id="@item.Id">Transfer</a> |
+                        <a asp-action="Transactions" asp-route-id="@item.Id">Transaction History</a> |
+                        <a asp-action="Close" asp-route-id="@item.Id">Close</a>
+                    </td>
                 }
             </tr>
         }

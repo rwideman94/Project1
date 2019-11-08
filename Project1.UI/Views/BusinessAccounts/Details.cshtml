@@ -42,43 +42,11 @@
         </dd>
     </dl>
 </div>
-<h4>Last 10 Transactions</h4>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Transaction Time
-            </th>
-            <th>
-                Amount
-            </th>
-            <th>
-                Transaction Details
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Transactions)
-        {
-            if (item != null)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TransTime)
-                    </td>
-                    <td>
-                        $@Html.DisplayFor(modelItem => item.Amount)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Details)
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>
 <div>
-    @*<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>*@
+    <h4>Last 10 Transactions</h4>
+    @Html.Partial("../Shared/_TransactionList.cshtml", Model.Transactions)
+</div>
+<div>
+    <a asp-action="Transactions" asp-route-id="@Model.Account.Id">Transactions By Date</a> |
     <a asp-action="Index">Back to List</a>
 </div>

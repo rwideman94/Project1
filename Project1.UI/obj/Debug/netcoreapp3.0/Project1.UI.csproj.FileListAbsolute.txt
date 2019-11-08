@@ -140,3 +140,5 @@ C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\
 C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\BusinessAccounts\Deposit.cshtml.g.cs
 C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\BusinessAccounts\Withdraw.cshtml.g.cs
 C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\BusinessAccounts\Transfer.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_TransactionList.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\BusinessAccounts\Transactions.cshtml.g.cs
