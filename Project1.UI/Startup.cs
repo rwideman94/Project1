@@ -35,14 +35,20 @@ namespace Project1.UI
             services.AddDbContext<Project1DbContext>(options =>
                options.UseSqlServer(
                    Configuration.GetConnectionString("Project1DbContext")));
+            services.AddDbContext<TestDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("TestDbContext")));
             services.AddControllersWithViews();
+            //services.AddIdentity<AppUser, IdentityRole>()
+            //    //.AddRoles<IdentityRole>()
+            //    .AddEntityFrameworkStores<Project1DbContext>();
+
             services.AddIdentity<AppUser, IdentityRole>()
-                //.AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<Project1DbContext>();
+                .AddEntityFrameworkStores<TestDbContext>();
 
             services.ConfigureApplicationCookie(options => options.LoginPath = "/User/Login");
 
-            services.AddTransient<IBusinessRepo, BusinessRepo>();
+            services.AddTransient<IAccountRepo, AccountRepo>();
 
             services.AddControllers(config =>
             {

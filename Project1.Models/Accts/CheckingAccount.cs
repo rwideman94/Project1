@@ -5,8 +5,7 @@ using System.Text;
 
 namespace Project1.Models.Accts
 {
-    public class CheckingAccount :Account
+    public class CheckingAccount : Account
     {
-        public List<CheckingTransaction> Transactions { get; set; }
-}
+    }
 }

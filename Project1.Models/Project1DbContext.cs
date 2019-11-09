@@ -28,11 +28,12 @@ namespace Project1.Models
 
         public DbSet<AppUser> AppUsers { get; set; }
 
-        public DbSet<BusinessAccount> BusinessAccounts { get; set; }
-        public DbSet<CheckingAccount> CheckingAccounts { get; set; }
-        //public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<BusinessTransaction> BusinessTransactions { get; set; }
-        public DbSet<CheckingTransaction> CheckingTransactions { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        //public DbSet<BusinessAccount> BusinessAccounts { get; set; }
+        //public DbSet<CheckingAccount> CheckingAccounts { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        //public DbSet<BusinessTransaction> BusinessTransactions { get; set; }
+        //public DbSet<CheckingTransaction> CheckingTransactions { get; set; }
         
         //public DbSet<Loan> Loans{ get; set; }
         //public DbSet<TermDeposit> TermDeposits { get; set; }

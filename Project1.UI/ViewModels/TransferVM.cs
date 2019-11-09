@@ -24,6 +24,6 @@ namespace Project1.UI.ViewModels
         [Display(Name = "Account to transfer to")]
         public int AccountIDTo { get; set; }
 
-        public IEnumerable<BusinessAccount> Accounts { get; set; }
+        public List<Account> Accounts { get; set; }
     }
 }

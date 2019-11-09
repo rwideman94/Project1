@@ -15,6 +15,6 @@ namespace Project1.UI.ViewModels
         [DataType(DataType.Date)]
         [Display(Name = "End Date")]
         public DateTime End { get; set; }
-        public List<BusinessTransaction> Transactions { get; set; }
+        public List<Transaction> Transactions { get; set; } = new List<Transaction>();
     }
 }

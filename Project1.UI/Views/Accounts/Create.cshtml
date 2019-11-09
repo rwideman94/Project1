@@ -1,0 +1,33 @@
+﻿@model Project1.Models.Accts.Account
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Account</h1>
+<h3>Please select an account type and choose a nickname for your account.</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <label asp-for="AccountType" class="control-label"></label>
+            @Html.DropDownListFor(m => m.AccountType,
+               new SelectList(new List<string> { "Business", "Checking" }), "Do you want a business or checking account?")
+            <div class="form-group">
+                <label asp-for="NickName" class="control-label"></label>
+                <input asp-for="NickName" class="form-control" />
+                <span asp-validation-for="NickName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

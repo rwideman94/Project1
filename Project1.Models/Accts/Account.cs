@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Project1.Models.Transactions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Project1.Models.Accts
 {
-    public abstract class Account
+    public class Account
     {
         [Display(Name = "Account ID")]
         public int Id { get; set; }
-        [Required]
         public string AppUserId { get; set; }
         [Required]
         [StringLength(maximumLength:20,MinimumLength = 5)]
@@ -23,5 +23,8 @@ namespace Project1.Models.Accts
         [DataType(DataType.Date)]
         [Display(Name = "Creation Date")]
         public DateTime DateCreated { get; set; }
+        [Display(Name ="Account Type")]
+        public string AccountType { get; set; }
+        public List<Transaction> Transactions { get; set; } = new List<Transaction>();
     }
 }

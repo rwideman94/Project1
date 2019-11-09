@@ -11,7 +11,7 @@ namespace Project1.UI.ViewModels
     {
         [Required]
         [DataType(DataType.Currency)]
-        [Range(0,Double.MaxValue, ErrorMessage="You can't withdraw a negative amount.")]
+        [Range(0.01,Double.MaxValue, ErrorMessage="You can't withdraw an amount of 0 or less.")]
         [Display(Name ="Withdrawl Amount")]
         public decimal Amount { get; set; }
     }

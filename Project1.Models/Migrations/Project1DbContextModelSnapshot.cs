@@ -221,7 +221,7 @@ namespace Project1.Models.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Project1.Models.Accts.BusinessAccount", b =>
+            modelBuilder.Entity("Project1.Models.Accts.Account", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -229,7 +229,6 @@ namespace Project1.Models.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AppUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Balance")
@@ -238,43 +237,9 @@ namespace Project1.Models.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("InterestRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsClosed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("NickName")
+                    b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
-
-                    b.Property<decimal>("OverdraftFees")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("BusinessAccounts");
-                });
-
-            modelBuilder.Entity("Project1.Models.Accts.CheckingAccount", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("InterestRate")
                         .HasColumnType("decimal(18,2)");
@@ -289,22 +254,28 @@ namespace Project1.Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.ToTable("Accounts");
 
-                    b.ToTable("CheckingAccounts");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Account");
                 });
 
-            modelBuilder.Entity("Project1.Models.Transactions.BusinessTransaction", b =>
+            modelBuilder.Entity("Project1.Models.Transactions.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccountID")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("BusinessAccountID")
+                    b.Property<int?>("BusinessAccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CheckingAccountId")
                         .HasColumnType("int");
 
                     b.Property<string>("Details")
@@ -315,35 +286,11 @@ namespace Project1.Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BusinessAccountID");
+                    b.HasIndex("BusinessAccountId");
 
-                    b.ToTable("BusinessTransactions");
-                });
+                    b.HasIndex("CheckingAccountId");
 
-            modelBuilder.Entity("Project1.Models.Transactions.CheckingTransaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("CheckingAccountID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Details")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TransTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CheckingAccountID");
-
-                    b.ToTable("CheckingTransactions");
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("Project1.Models.AppUser", b =>
@@ -369,6 +316,28 @@ namespace Project1.Models.Migrations
                         .HasMaxLength(2);
 
                     b.HasDiscriminator().HasValue("AppUser");
+                });
+
+            modelBuilder.Entity("Project1.Models.Accts.BusinessAccount", b =>
+                {
+                    b.HasBaseType("Project1.Models.Accts.Account");
+
+                    b.Property<decimal>("OverdraftFees")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasDiscriminator().HasValue("BusinessAccount");
+                });
+
+            modelBuilder.Entity("Project1.Models.Accts.CheckingAccount", b =>
+                {
+                    b.HasBaseType("Project1.Models.Accts.Account");
+
+                    b.HasIndex("AppUserId")
+                        .HasName("IX_Accounts_AppUserId1");
+
+                    b.HasDiscriminator().HasValue("CheckingAccount");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -422,13 +391,22 @@ namespace Project1.Models.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Project1.Models.Transactions.Transaction", b =>
+                {
+                    b.HasOne("Project1.Models.Accts.BusinessAccount", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("BusinessAccountId");
+
+                    b.HasOne("Project1.Models.Accts.CheckingAccount", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("CheckingAccountId");
+                });
+
             modelBuilder.Entity("Project1.Models.Accts.BusinessAccount", b =>
                 {
                     b.HasOne("Project1.Models.AppUser", null)
                         .WithMany("BAccounts")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AppUserId");
                 });
 
             modelBuilder.Entity("Project1.Models.Accts.CheckingAccount", b =>
@@ -436,26 +414,7 @@ namespace Project1.Models.Migrations
                     b.HasOne("Project1.Models.AppUser", null)
                         .WithMany("CAccounts")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Project1.Models.Transactions.BusinessTransaction", b =>
-                {
-                    b.HasOne("Project1.Models.Accts.BusinessAccount", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("BusinessAccountID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Project1.Models.Transactions.CheckingTransaction", b =>
-                {
-                    b.HasOne("Project1.Models.Accts.CheckingAccount", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("CheckingAccountID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasConstraintName("FK_Accounts_AspNetUsers_AppUserId1");
                 });
 #pragma warning restore 612, 618
         }

@@ -23,6 +23,10 @@
     <Compile Remove="Migrations\20191107004347_Transactions.Designer.cs" />
     <Compile Remove="Migrations\20191107021011_TransChanged.cs" />
     <Compile Remove="Migrations\20191107021011_TransChanged.Designer.cs" />
+    <Compile Remove="Migrations\20191109190315_MergeAcctsAndTrans.cs" />
+    <Compile Remove="Migrations\20191109190315_MergeAcctsAndTrans.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191109212037_FixedType.cs" />
+    <Compile Remove="Migrations\TestDb\20191109212037_FixedType.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

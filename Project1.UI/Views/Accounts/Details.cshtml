@@ -1,0 +1,52 @@
+﻿@model Project1.UI.ViewModels.AccountVM
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h3>@Model.Account.AccountType Account #@Model.Account.Id</h3>
+    <hr />
+    <dl class="row">
+        @*<dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.UserId)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.UserId)
+            </dd>*@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.Balance)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.Balance)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.InterestRate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.InterestRate)
+        </dd>
+        @*<dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.IsClosed)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IsClosed)
+            </dd>*@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Account.DateCreated)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Account.DateCreated)
+        </dd>
+    </dl>
+</div>
+<div>
+    <h4>Last 10 Transactions</h4>
+    @Html.Partial("../Shared/_TransactionList.cshtml", Model.Transactions)
+</div>
+<div>
+    <a asp-action="Transactions" asp-route-id="@Model.Account.Id">Transactions By Date</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

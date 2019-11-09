@@ -30,7 +30,12 @@
                         </li>
                         @if (signInManager.IsSignedIn(User))
                         {
-                            <li class="dropdown nav-item nav-link text-dark">
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Index">Accounts</a>
+                            </li>
+
+                            @*<li class="dropdown nav-item nav-link text-dark">
                                 <a class="dropdown-toggle" data-toggle="dropdown">
                                     Accounts
                                     <span class="caret"></span>
@@ -43,7 +48,7 @@
                                         <a class="nav-link text-dark" asp-area="" asp-controller="CheckingAccounts" asp-action="Index">Checking Accounts</a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li>*@
                         }
                     </ul>
                     <ul class="navbar-nav ml-auto">
