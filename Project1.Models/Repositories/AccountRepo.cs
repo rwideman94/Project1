@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Project1.Models.Accts;
+using Project1.Models.BusinessLayer;
 using Project1.Models.Transactions;
 
 namespace Project1.Models.Repositories
@@ -13,37 +14,22 @@ namespace Project1.Models.Repositories
     {
 
         private TestDbContext _context;
+        private AccountBL ABL;
 
         public AccountRepo(TestDbContext ctx)
         {
             _context = ctx;
+            ABL = new AccountBL();
         }
 
-        public async Task<bool> Add(BusinessAccount businessAccount)
+        public async Task<bool> Add(Account account)
         {
-            _context.Add(businessAccount);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-        public async Task<bool> Add(CheckingAccount checkingAccount)
-        {
-            _context.Add(checkingAccount);
+            _context.Add(account);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public void AddBusinessTransaction(int id, decimal amount, string details)
-        {
-            Transaction transaction = new Transaction
-            {
-                AccountID = id,
-                Amount = amount,
-                TransTime = DateTime.Now,
-                Details = details
-            };
-            _context.Add(transaction);
-        }
-        public void AddCheckingTransaction(int id, decimal amount, string details)
+        public void AddTransaction(int id, decimal amount, string details)
         {
             Transaction transaction = new Transaction
             {
@@ -55,71 +41,41 @@ namespace Project1.Models.Repositories
             _context.Add(transaction);
         }
 
-        public bool BusinessAccountExists(int id)
-        {
-            return _context.Accounts.Any(e => e.Id == id);
-        }
-        public bool CheckingAccountExists(int id)
+        public bool AccountExists(int id)
         {
             return _context.Accounts.Any(e => e.Id == id);
         }
 
         public async Task<bool> Close(Account account)
         {
-            account.IsClosed = true;
+            ABL.Close(account);
             _context.Update(account);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> Deposit(BusinessAccount account, decimal amount)
-        {
-            account.Balance += amount;
-            _context.Update(account);
-            AddBusinessTransaction(account.Id, amount, $"Deposit of ${amount}");
             await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<bool> Deposit(Account account, decimal amount)
         {
-            account.Balance += amount;
+            ABL.Deposit(account, amount);
             _context.Update(account);
-            AddCheckingTransaction(account.Id, amount, $"Deposit of ${amount}");
+            AddTransaction(account.Id, amount, $"Deposit of ${amount}");
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<List<Account>> GetBusiness()
+        public async Task<List<Account>> Get()
         {
             return await _context.Accounts.ToListAsync();
         }
-        public async Task<Account> GetBusiness(int? id)
+        public async Task<Account> Get(int? id)
         {
             return await _context.Accounts.FirstOrDefaultAsync(b => b.Id == id);
         }
-        public async Task<List<Account>> GetBusiness(string userId)
+        public async Task<List<Account>> Get(string userId)
         {
             return await _context.Accounts.Where(b => b.AppUserId == userId).ToListAsync();
         }
-        public async Task<List<Transaction>> GetBusinessTransactions()
-        {
-            return await _context.Transactions.ToListAsync();
-        }
-
-        public async Task<List<Account>> GetChecking()
-        {
-            return await _context.Accounts.ToListAsync();
-        }
-        public async Task<Account> GetChecking(int? id)
-        {
-            return await _context.Accounts.FirstOrDefaultAsync(c => c.Id == id);
-        }
-        public async Task<List<Account>> GetChecking(string userId)
-        {
-            return await _context.Accounts.Where(b => b.AppUserId == userId).ToListAsync();
-        }
-        public async Task<List<Transaction>> GetCheckingTransactions()
+        public async Task<List<Transaction>> GetTransactions()
         {
             return await _context.Transactions.ToListAsync();
         }
@@ -128,28 +84,12 @@ namespace Project1.Models.Repositories
         {
             try
             {
-                acctFrom.Balance -= amount;
-                acctTo.Balance += amount;
+                ABL.Transfer(acctFrom, acctTo, amount);
 
                 _context.Update(acctFrom);
                 _context.Update(acctTo);
-                if (acctFrom is BusinessAccount)
-                {
-                    //AddBusinessTransaction(acctTo.Id, amount, $"Transfer of ${amount} to {acctTo.Type} account #{acctTo.Id}");
-                }
-                else
-                {
-                    //AddCheckingTransaction(acctTo.Id, amount, $"Transfer of ${amount} to {acctTo.Type} account #{acctTo.Id}");
-                }
-
-                if (acctFrom is BusinessAccount)
-                {
-                    //AddBusinessTransaction(acctTo.Id, amount, $"Transfer of ${amount} from {acctFrom.Type} #{acctFrom.Id}");
-                }
-                else
-                {
-                    //AddCheckingTransaction(acctTo.Id, amount, $"Transfer of ${amount} from {acctFrom.Type} #{acctFrom.Id}");
-                }
+                AddTransaction(acctTo.Id, amount, $"Transfer of ${amount} to {acctTo.AccountType} account #{acctTo.Id}");
+                AddTransaction(acctTo.Id, amount, $"Transfer of ${amount} from {acctFrom.AccountType} #{acctFrom.Id}");
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -159,27 +99,25 @@ namespace Project1.Models.Repositories
             }
         }
 
-        public async Task<bool> Withdraw(BusinessAccount account, decimal amount)
-        {
-            account.Balance -= amount;
-            _context.Update(account);
-            AddBusinessTransaction(account.Id, amount, $"Withdrawl of ${amount}");
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
         public async Task<bool> Withdraw(Account account, decimal amount)
         {
-            account.Balance -= amount;
+            ABL.Withdraw(account, amount);
             _context.Update(account);
-            AddCheckingTransaction(account.Id, amount, $"Withdrawl of ${amount}");
+            AddTransaction(account.Id, amount, $"Withdrawl of ${amount}");
             await _context.SaveChangesAsync();
             return true;
         }
 
-
-
-
+        public async Task<bool> Overdraft(AppUser user, Account account, decimal amount)
+        {
+            ABL.Withdraw(account, amount);
+            var overdraft = ABL.Overdraft(user, account);
+            AddTransaction(account.Id, amount, $"Withdrawl of ${amount} (Overdraft fee of {overdraft} charged to your profile)");
+            _context.Update(account);
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
     }
 }

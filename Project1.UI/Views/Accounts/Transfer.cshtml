@@ -1,16 +1,15 @@
 ﻿@model Project1.UI.ViewModels.TransferVM
 
 <h1>Transfer</h1>
-
+<h3>@Model.AccountFromBalance currently in account #@Model.AccountIDFrom</h3>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Transfer">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="AccountIDFrom" class="control-label"></label>
-                <input asp-for="AccountIDFrom" class="form-control" disabled />
-                <span asp-validation-for="AccountIDFrom" class="text-danger"></span>
+                <input asp-for="AccountFromBalance" class="form-control" hidden />
+                <input asp-for="AccountIDFrom" class="form-control" hidden />
             </div>
             <div>
                 Your accounts:
@@ -20,7 +19,7 @@
                         if (!item.IsClosed)
                         {
                             <li>
-                                @item.Id: @item.NickName
+                                @item.AccountType account #@item.Id: @item.NickName
                             </li>
                         }
                     }

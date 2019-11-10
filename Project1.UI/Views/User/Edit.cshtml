@@ -1,0 +1,89 @@
+﻿@*@model Project1.Models.AppUser
+
+@{
+    ViewData["Title"] = "Edit Customer Profile";
+}
+
+<h1>Edit</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <table class="table">
+                <tr>
+                    <td class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </td>
+                    <td class="col-sm-10">
+                        <input asp-for="Email" class="form-control" disabled />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </td>
+                    <td class="col-sm-10">
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </td>
+                    <td class="col-sm-10">
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.DOB)
+                    </td>
+                    <td class="col-sm-10">
+                        <input asp-for="DOB" class="form-control" disabled />
+                        <span asp-validation-for="DOB" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.City)
+                    </td>
+                    <td class="col-sm-10">
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.State)
+                    </td>
+                    <td class="col-sm-10">
+                        <input asp-for="State" class="form-control" />
+                        <span asp-validation-for="State" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </td>
+                    <td class="col-sm-10">
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </td>
+                </tr>
+            </table>
+            <div class="form-group">
+                <input type="submit" value="Edit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details">Back to Customer Profile</a>
+</div>*@
+

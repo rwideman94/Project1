@@ -29,6 +29,12 @@ namespace Project1.UI.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Details()
+        {
+            AppUser currentUser = await userManager.GetUserAsync(User);
+            return View(currentUser);
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterVM model)
@@ -91,5 +97,27 @@ namespace Project1.UI.Controllers
             }
             return View(model);
         }
+
+        //public async Task<IActionResult> Edit()
+        //{
+        //    return View(await userManager.GetUserAsync(User));
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> Edit([Bind("FirstName, LastName, City, State, PhoneNumber")]AppUser appUser)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        AppUser currentUser = await userManager.GetUserAsync(User);
+        //        currentUser.FirstName = appUser.FirstName;
+        //        currentUser.LastName = appUser.LastName;
+        //        currentUser.City = appUser.City;
+        //        currentUser.State = appUser.State;
+        //        currentUser.PhoneNumber = appUser.PhoneNumber;
+        //        return RedirectToAction("Details", "User");
+        //    }
+        //    return View(appUser);
+        //}
     }
 }
+

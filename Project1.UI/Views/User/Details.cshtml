@@ -1,0 +1,80 @@
+﻿@model Project1.Models.AppUser
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<h1>User Details</h1>
+
+<div>
+    <table class="table">
+        <tr>
+            <td class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </td>
+            <td class="col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </td>
+        </tr>
+        <tr>
+            <td class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FirstName)
+            </td>
+            <td class="col-sm-10">
+                @Html.DisplayFor(model => model.FirstName)
+            </td>
+        </tr>
+        <tr>
+            <td class="col-sm-2">
+                @Html.DisplayNameFor(model => model.LastName)
+            </td>
+            <td class="col-sm-10">
+                @Html.DisplayFor(model => model.LastName)
+            </td>
+        </tr>
+        <tr>
+            <td class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DOB)
+            </td>
+            <td class="col-sm-10">
+                @Html.DisplayFor(model => model.DOB)
+            </td>
+        </tr>
+        <tr>
+            <td class="col-sm-2">
+                @Html.DisplayNameFor(model => model.City)
+            </td>
+            <td class="col-sm-10">
+                @Html.DisplayFor(model => model.City)
+            </td>
+        </tr>
+        <tr>
+            <td class="col-sm-2">
+                @Html.DisplayNameFor(model => model.State)
+            </td>
+            <td class="col-sm-10">
+                @Html.DisplayFor(model => model.State)
+            </td>
+        </tr>
+        <tr>
+            <td class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </td>
+            <td class="col-sm-10">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </td>
+        </tr>
+        <tr>
+            <td class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Overdraft)
+            </td>
+            <td class="col-sm-10">
+                @Html.DisplayFor(model => model.Overdraft)
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    @*<a asp-controller="User" asp-action="Edit">Edit User Info</a> |*@ 
+    <a asp-controller="Home" asp-action="Index">Back to List</a>
+</div>

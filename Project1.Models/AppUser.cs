@@ -27,9 +27,13 @@ namespace Project1.Models
         [StringLength(maximumLength: 2)]
         public string State { get; set; }
 
-        public List<BusinessAccount> BAccounts { get; set; }// = new List<BusinessAccount>();
-        public List<CheckingAccount> CAccounts { get; set; }// = new List<CheckingAccount>();
-        //public List<Loan> Loans { get; set; } = new List<Loan>();
-        //public List<TermDeposit> TermDeposits { get; set; } = new List<TermDeposit>();
+        [DataType(DataType.Currency)]
+        [Display(Name = "Current Overdraft")]
+        public decimal Overdraft { get; set; }
+
+        public List<BusinessAccount> BAccounts { get; set; }
+        public List<CheckingAccount> CAccounts { get; set; }
+        //public List<Loan> Loans { get; set; };
+        //public List<TermDeposit> TermDeposits { get; set; };
     }
 }

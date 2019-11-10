@@ -26,5 +26,7 @@ namespace Project1.Models.Accts
         [Display(Name ="Account Type")]
         public string AccountType { get; set; }
         public List<Transaction> Transactions { get; set; } = new List<Transaction>();
+        public static decimal BusinessInterestRate = .25M;
+        public static decimal CheckingInterestRate = .01M;
     }
 }

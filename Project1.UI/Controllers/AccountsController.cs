@@ -18,7 +18,6 @@ namespace Project1.UI.Controllers
 {
     public class AccountsController : Controller
     {
-        private static readonly decimal defaultInterestRate = 0.01m;
         private readonly IAccountRepo _repo;
         private readonly UserManager<AppUser> userManager;
 
@@ -32,7 +31,7 @@ namespace Project1.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View((await _repo.GetBusiness()).Where<Account>(b => b.AppUserId == userManager.GetUserId(User)));
+            return View((await _repo.Get()).Where<Account>(b => b.AppUserId == userManager.GetUserId(User)));
         }
 
         // GET: BusinessAccounts/Details/5
@@ -43,7 +42,7 @@ namespace Project1.UI.Controllers
                 return NotFound();
             }
 
-            var businessAccount = await _repo.GetBusiness(id);
+            var businessAccount = await _repo.Get(id);
             if (businessAccount == null)
             {
                 return NotFound();
@@ -51,7 +50,7 @@ namespace Project1.UI.Controllers
             AccountVM bavm = new AccountVM
             {
                 Account = businessAccount,
-                Transactions = (await _repo.GetBusinessTransactions())
+                Transactions = (await _repo.GetTransactions())
                     .Where(acct => acct.AccountID == id)
                     .Reverse()
                     .Take(10)
@@ -62,27 +61,30 @@ namespace Project1.UI.Controllers
 
         public async Task<IActionResult> Transactions(int id, [Bind("Start, End")] TransactionsVM tlvm)
         {
-            if (tlvm.Start <= new DateTime(2019,10,31))
+            if (ModelState.IsValid)
             {
-                tlvm.Start = new DateTime(2019, 10, 31);
-            }
-            if (tlvm.End < tlvm.Start)
-            {
-                tlvm.End = tlvm.Start;
-            }
-            var trans = (await _repo.GetBusinessTransactions())
-                    .Where(trans => (trans.AccountID == id))
-                    .Where(trans => trans.TransTime >= tlvm.Start)
-                    .Where(trans => trans.TransTime <= tlvm.End.AddDays(1).AddSeconds(-1))
-                    .ToList();
-            List<Transaction> validTrans = new List<Transaction>();
-            foreach (var item in trans)
-            {
-                validTrans.Add(item);
-            }
-            foreach (var item in validTrans)
-            {
-                tlvm.Transactions.Add(item);
+                if (tlvm.Start <= DateTime.UnixEpoch)
+                {
+                    tlvm.Start = DateTime.Today;
+                }
+                if (tlvm.End < tlvm.Start)
+                {
+                    tlvm.End = tlvm.Start.AddDays(1).AddTicks(-1);
+                }
+                var trans = (await _repo.GetTransactions())
+                        .Where(trans => (trans.AccountID == id))
+                        .Where(trans => trans.TransTime >= tlvm.Start)
+                        .Where(trans => trans.TransTime <= tlvm.End.AddDays(1).AddTicks(-1))
+                        .ToList();
+                List<Transaction> validTrans = new List<Transaction>();
+                foreach (var item in trans)
+                {
+                    validTrans.Add(item);
+                }
+                foreach (var item in validTrans)
+                {
+                    tlvm.Transactions.Add(item);
+                }
             }
             return View(tlvm);
         }
@@ -102,7 +104,6 @@ namespace Project1.UI.Controllers
         {
             account.AppUserId = userManager.GetUserId(User);
             account.DateCreated = DateTime.Now;
-            account.InterestRate = defaultInterestRate;
             if (ModelState.IsValid)
             {
                 switch (account.AccountType)
@@ -112,7 +113,7 @@ namespace Project1.UI.Controllers
                             BusinessAccount bAcct = new BusinessAccount { 
                                 AppUserId = account.AppUserId,
                                 DateCreated = account.DateCreated,
-                                InterestRate = account.InterestRate,
+                                InterestRate = Account.BusinessInterestRate,
                                 NickName = account.NickName,
                                 AccountType = account.AccountType
                             };
@@ -125,7 +126,7 @@ namespace Project1.UI.Controllers
                             {
                                 AppUserId = account.AppUserId,
                                 DateCreated = account.DateCreated,
-                                InterestRate = account.InterestRate,
+                                InterestRate = Account.CheckingInterestRate,
                                 NickName = account.NickName,
                                 AccountType = account.AccountType
                             };
@@ -149,7 +150,7 @@ namespace Project1.UI.Controllers
                 return NotFound();
             }
 
-            var businessAccount = await _repo.GetBusiness(id);
+            var businessAccount = await _repo.Get(id);
             if (businessAccount == null)
             {
                 return NotFound();
@@ -163,7 +164,7 @@ namespace Project1.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CloseConfirmed(int id)
         {
-            await _repo.Close(await _repo.GetBusiness(id));
+            await _repo.Close(await _repo.Get(id));
             return RedirectToAction(nameof(Index));
         }
 
@@ -173,10 +174,14 @@ namespace Project1.UI.Controllers
             {
                 return NotFound();
             }
-            var bAccount = await _repo.GetBusiness(id);
+            var account = await _repo.Get(id);
+            if (true)
+            {
+
+            }
             DepositVM depositVM = new DepositVM { Amount = 0 };
 
-            if (bAccount == null)
+            if (account == null)
             {
                 return NotFound();
             }
@@ -192,7 +197,7 @@ namespace Project1.UI.Controllers
             {
                 try
                 {
-                    await _repo.Deposit(await _repo.GetBusiness(id), depositVM.Amount);
+                    await _repo.Deposit(await _repo.Get(id), depositVM.Amount);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -216,8 +221,8 @@ namespace Project1.UI.Controllers
             {
                 return NotFound();
             }
-            var account = await _repo.GetBusiness(id);
-            WithdrawlVM withdrawlVM = new WithdrawlVM { Amount = 0 };
+            var account = await _repo.Get(id);
+            WithdrawlVM withdrawlVM = new WithdrawlVM { Amount = 0, Balance = account.Balance, AccountType = account.AccountType };
 
             if (account == null)
             {
@@ -229,13 +234,21 @@ namespace Project1.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Withdraw(int id, [Bind("Amount")] WithdrawlVM withdrawlVM)
+        public async Task<IActionResult> Withdraw(int id, [Bind("Balance", "Amount", "AccountType")] WithdrawlVM withdrawlVM)
         {
+            Account account = await _repo.Get(id);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _repo.Withdraw(await _repo.GetBusiness(id), withdrawlVM.Amount);
+                    if (withdrawlVM.Amount > account.Balance)
+                    {
+                        await _repo.Overdraft(await userManager.GetUserAsync(User), account, withdrawlVM.Amount);
+                    }
+                    else
+                    {
+                        await _repo.Withdraw(account, withdrawlVM.Amount);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -260,31 +273,30 @@ namespace Project1.UI.Controllers
             {
                 return NotFound();
             }
-            var bAccount = await _repo.GetBusiness(id);
+            var account = await _repo.Get(id);
 
-            if (bAccount == null)
+            if (account == null)
             {
                 return NotFound();
             }
-            //return RedirectToAction(nameof(Index));
-            var accounts = (await _repo.GetBusiness(userManager.GetUserId(User)))
+            var accounts = (await _repo.Get(userManager.GetUserId(User)))
                 .Where(b => !b.IsClosed)
-                .Except(new List<Account> { bAccount });
+                .Except(new List<Account> { account });
             List<Account> validAccounts = new List<Account>();
             foreach (var item in accounts)
             {
                 validAccounts.Add(item);
             }
-            return View(new TransferVM { Accounts = validAccounts, AccountIDFrom = (int)id });
+            return View(new TransferVM { Accounts = validAccounts, AccountIDFrom = (int)id, AccountFromBalance = account.Balance});
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Transfer(int id, [Bind("AccountIDTo, Amount")] TransferVM transferVM)
+        public async Task<IActionResult> Transfer(int id, [Bind("AccountIDFrom, AccountIDTo, Amount, AccountFromBalance")] TransferVM transferVM)
         {
-            var accounts = (await _repo.GetBusiness(userManager.GetUserId(User)))
+            var accounts = (await _repo.Get(userManager.GetUserId(User)))
                 .Where(b => !b.IsClosed)
-                .Except(new List<Account> { await _repo.GetBusiness(id) });
+                .Except(new List<Account> { await _repo.Get(transferVM.AccountIDFrom) });
             List<Account> validAccounts = new List<Account>();
             foreach (var item in accounts)
             {
@@ -294,19 +306,16 @@ namespace Project1.UI.Controllers
             {
                 try
                 {
-                    await _repo.Transfer(await _repo.GetBusiness(id), await _repo.GetBusiness(transferVM.AccountIDTo), transferVM.Amount);
+                    await _repo.Transfer(await _repo.Get(transferVM.AccountIDFrom), await _repo.Get(transferVM.AccountIDTo), transferVM.Amount);
                 }
-                catch //(DbUpdateConcurrencyException)
+                catch
                 {
-                    if (!BusinessAccountExists(id))
+                    if (!BusinessAccountExists(transferVM.AccountIDFrom))
                     {
                         return NotFound();
                     }
                     else if (!BusinessAccountExists(transferVM.AccountIDTo))
                     {
-                        //transferVM.Accounts = validAccounts;
-                        //transferVM.AccountIDFrom = (int)id;
-                        //return View(transferVM);
                         return NotFound();
                     }
                     else
@@ -323,7 +332,7 @@ namespace Project1.UI.Controllers
 
         private bool BusinessAccountExists(int id)
         {
-            return _repo.BusinessAccountExists(id);
+            return _repo.AccountExists(id);
         }
     }
 }
