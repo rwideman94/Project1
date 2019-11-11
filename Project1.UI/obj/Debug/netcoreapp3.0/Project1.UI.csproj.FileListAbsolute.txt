@@ -140,3 +140,12 @@ C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\
 C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\Accounts\Withdraw.cshtml.g.cs
 C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\User\Details.cshtml.g.cs
 C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\User\Edit.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_AccountList.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\Loans\Create.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\Loans\Details.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\Loans\Index.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\TermDeposits\Create.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\TermDeposits\Details.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\TermDeposits\Index.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\TermDeposits\Withdraw.cshtml.g.cs
+C:\Users\Robert\source\repos\Project1\Project1.UI\obj\Debug\netcoreapp3.0\Razor\Views\Loans\Payment.cshtml.g.cs

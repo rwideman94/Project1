@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using Project1.Models.Accts;
+using Project1.Models.Loans;
 
 namespace Project1.Models
 {
@@ -33,7 +34,7 @@ namespace Project1.Models
 
         public List<BusinessAccount> BAccounts { get; set; }
         public List<CheckingAccount> CAccounts { get; set; }
-        //public List<Loan> Loans { get; set; };
-        //public List<TermDeposit> TermDeposits { get; set; };
+        public List<Loan> Loans { get; set; }
+        public List<TermDeposit> TermDeposits { get; set; }
     }
 }

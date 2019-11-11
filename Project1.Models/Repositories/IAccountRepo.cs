@@ -17,8 +17,10 @@ namespace Project1.Models.Repositories
         Task<Account> Get(int? id);
         Task<List<Account>> Get(string userId);
         Task<List<Transaction>> GetTransactions();
+        Task<bool> LoanWithdrawl(Account account, decimal amount, int loanID);
         Task<bool> Overdraft(AppUser user, Account account, decimal amount);
         Task<bool> Withdraw(Account account, decimal amount);
+        Task<bool> TDDeposit(Account account, decimal amount, int tdID);
         Task<bool> Transfer(Account acctFrom, Account acctTo, decimal amount);
 
     }

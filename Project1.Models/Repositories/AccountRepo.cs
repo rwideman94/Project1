@@ -13,8 +13,8 @@ namespace Project1.Models.Repositories
     public class AccountRepo : IAccountRepo
     {
 
-        private TestDbContext _context;
-        private AccountBL ABL;
+        private readonly TestDbContext _context;
+        private readonly AccountBL ABL;
 
         public AccountRepo(TestDbContext ctx)
         {
@@ -80,6 +80,23 @@ namespace Project1.Models.Repositories
             return await _context.Transactions.ToListAsync();
         }
 
+        public async Task<bool> LoanWithdrawl(Account account, decimal amount, int loanID)
+        {
+            ABL.Withdraw(account, amount);
+            _context.Update(account);
+            AddTransaction(account.Id, amount, $"PAyment of ${amount} on Loan #{loanID}");
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> TDDeposit(Account account, decimal amount, int tdID)
+        {
+            ABL.Deposit(account, amount);
+            _context.Update(account);
+            AddTransaction(account.Id, amount, $"Deposit of ${amount} from Term Deposit #{tdID}");
+            await _context.SaveChangesAsync();
+            return true;
+        }
         public async Task<bool> Transfer(Account acctFrom, Account acctTo, decimal amount)
         {
             try

@@ -19,19 +19,22 @@ namespace Project1.UI.Controllers
     public class AccountsController : Controller
     {
         private readonly IAccountRepo _repo;
-        private readonly UserManager<AppUser> userManager;
+        private readonly UserManager<AppUser> UserManager;
 
         public AccountsController(IAccountRepo repo, UserManager<AppUser> userManager)
         {
             _repo = repo;
-            this.userManager = userManager;
+            UserManager = userManager;
         }
 
         // GET: BusinessAccounts
 
         public async Task<IActionResult> Index()
         {
-            return View((await _repo.Get()).Where<Account>(b => b.AppUserId == userManager.GetUserId(User)));
+            var accts = (await _repo.Get()).Where<Account>(a => a.AppUserId == UserManager.GetUserId(User));
+            var bAccts = accts.Where(b => b is BusinessAccount);
+            var cAccts = accts.Where(c => c is CheckingAccount);
+            return View(new IndexVM { Accounts = accts, BusinessAccoutns = bAccts, CheckingAccounts = cAccts });
         }
 
         // GET: BusinessAccounts/Details/5
@@ -102,7 +105,7 @@ namespace Project1.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NickName, AccountType")] Account account)
         {
-            account.AppUserId = userManager.GetUserId(User);
+            account.AppUserId = UserManager.GetUserId(User);
             account.DateCreated = DateTime.Now;
             if (ModelState.IsValid)
             {
@@ -110,7 +113,8 @@ namespace Project1.UI.Controllers
                 {
                     case "Business":
                         {
-                            BusinessAccount bAcct = new BusinessAccount { 
+                            BusinessAccount bAcct = new BusinessAccount
+                            {
                                 AppUserId = account.AppUserId,
                                 DateCreated = account.DateCreated,
                                 InterestRate = Account.BusinessInterestRate,
@@ -222,12 +226,12 @@ namespace Project1.UI.Controllers
                 return NotFound();
             }
             var account = await _repo.Get(id);
-            WithdrawlVM withdrawlVM = new WithdrawlVM { Amount = 0, Balance = account.Balance, AccountType = account.AccountType };
 
             if (account == null)
             {
                 return NotFound();
             }
+            WithdrawlVM withdrawlVM = new WithdrawlVM { Amount = 0, Balance = account.Balance, AccountType = account.AccountType };
 
             return View(withdrawlVM);
         }
@@ -243,7 +247,7 @@ namespace Project1.UI.Controllers
                 {
                     if (withdrawlVM.Amount > account.Balance)
                     {
-                        await _repo.Overdraft(await userManager.GetUserAsync(User), account, withdrawlVM.Amount);
+                        await _repo.Overdraft(await UserManager.GetUserAsync(User), account, withdrawlVM.Amount);
                     }
                     else
                     {
@@ -279,7 +283,7 @@ namespace Project1.UI.Controllers
             {
                 return NotFound();
             }
-            var accounts = (await _repo.Get(userManager.GetUserId(User)))
+            var accounts = (await _repo.Get(UserManager.GetUserId(User)))
                 .Where(b => !b.IsClosed)
                 .Except(new List<Account> { account });
             List<Account> validAccounts = new List<Account>();
@@ -287,14 +291,14 @@ namespace Project1.UI.Controllers
             {
                 validAccounts.Add(item);
             }
-            return View(new TransferVM { Accounts = validAccounts, AccountIDFrom = (int)id, AccountFromBalance = account.Balance});
+            return View(new TransferVM { Accounts = validAccounts, AccountIDFrom = (int)id, AccountFromBalance = account.Balance });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Transfer(int id, [Bind("AccountIDFrom, AccountIDTo, Amount, AccountFromBalance")] TransferVM transferVM)
         {
-            var accounts = (await _repo.Get(userManager.GetUserId(User)))
+            var accounts = (await _repo.Get(UserManager.GetUserId(User)))
                 .Where(b => !b.IsClosed)
                 .Except(new List<Account> { await _repo.Get(transferVM.AccountIDFrom) });
             List<Account> validAccounts = new List<Account>();

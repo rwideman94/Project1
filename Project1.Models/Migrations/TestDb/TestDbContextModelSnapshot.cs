@@ -259,6 +259,93 @@ namespace Project1.Models.Migrations.TestDb
                     b.HasDiscriminator<string>("AccountType").HasValue("Account");
                 });
 
+            modelBuilder.Entity("Project1.Models.Loans.Loan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("PaidOff")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Principal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("Project1.Models.Loans.LoanPayment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LoanID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PaymentTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LoanID");
+
+                    b.ToTable("LoanPayments");
+                });
+
+            modelBuilder.Entity("Project1.Models.TermDeposit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TermYears")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("WithdrawlAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("Withdrawn")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("TermDeposits");
+                });
+
             modelBuilder.Entity("Project1.Models.Transactions.Transaction", b =>
                 {
                     b.Property<int>("Id")
@@ -381,6 +468,29 @@ namespace Project1.Models.Migrations.TestDb
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Project1.Models.Loans.Loan", b =>
+                {
+                    b.HasOne("Project1.Models.AppUser", null)
+                        .WithMany("Loans")
+                        .HasForeignKey("AppUserId");
+                });
+
+            modelBuilder.Entity("Project1.Models.Loans.LoanPayment", b =>
+                {
+                    b.HasOne("Project1.Models.Loans.Loan", null)
+                        .WithMany("Payments")
+                        .HasForeignKey("LoanID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Project1.Models.TermDeposit", b =>
+                {
+                    b.HasOne("Project1.Models.AppUser", null)
+                        .WithMany("TermDeposits")
+                        .HasForeignKey("AppUserId");
                 });
 
             modelBuilder.Entity("Project1.Models.Transactions.Transaction", b =>

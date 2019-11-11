@@ -29,6 +29,24 @@
     <Compile Remove="Migrations\TestDb\20191109212037_FixedType.Designer.cs" />
     <Compile Remove="Migrations\TestDb\20191110034025_overdraftFix.cs" />
     <Compile Remove="Migrations\TestDb\20191110034025_overdraftFix.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191110160852_LoansAndTDs.cs" />
+    <Compile Remove="Migrations\TestDb\20191110160852_LoansAndTDs.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161157_LoansAndTDs.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161157_LoansAndTDs.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161354_LoansAndTDs.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161354_LoansAndTDs.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161435_LoansAndTDs.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161435_LoansAndTDs.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161539_LoansAndTDs.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161539_LoansAndTDs.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161622_LoansAndTDs.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161622_LoansAndTDs.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161701_LoansAndTDs.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161701_LoansAndTDs.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161842_LoansAndTDs.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161842_LoansAndTDs.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161948_LoansAndTDs.cs" />
+    <Compile Remove="Migrations\TestDb\20191110161948_LoansAndTDs.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
