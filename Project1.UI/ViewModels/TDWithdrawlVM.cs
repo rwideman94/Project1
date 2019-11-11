@@ -15,6 +15,7 @@ namespace Project1.UI.ViewModels
         [Display(Name = "Account to transfer funds to")]
         public int AccountID { get; set; }
         public bool Withdrawn { get; set; }
+        public DateTime maturityDate { get; set; }
         //public string TermDepositUserId { get; set; }
         //[Compare(nameof(TermDepositUserId))]
         //public string UserID { get; set; }

@@ -27,7 +27,6 @@ namespace Project1.UI.Controllers
             UserManager = userManager;
         }
 
-        // GET: BusinessAccounts
 
         public async Task<IActionResult> Index()
         {
@@ -37,7 +36,6 @@ namespace Project1.UI.Controllers
             return View(new IndexVM { Accounts = accts, BusinessAccoutns = bAccts, CheckingAccounts = cAccts });
         }
 
-        // GET: BusinessAccounts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -93,15 +91,11 @@ namespace Project1.UI.Controllers
             return View(tlvm);
         }
 
-        // GET: BusinessAccounts/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        //POST: BusinessAccounts/Create
-        //To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NickName, AccountType")] Account account)
@@ -147,7 +141,6 @@ namespace Project1.UI.Controllers
             return View(account);
         }
 
-        // GET: BusinessAccounts/Close/5
         public async Task<IActionResult> Close(int? id)
         {
             if (id == null)
@@ -164,7 +157,6 @@ namespace Project1.UI.Controllers
             return View(businessAccount);
         }
 
-        // POST: BusinessAccounts/Close/5
         [HttpPost, ActionName("Close")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CloseConfirmed(int id)

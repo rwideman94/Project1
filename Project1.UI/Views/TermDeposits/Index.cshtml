@@ -52,8 +52,12 @@
                 @if (!item.Withdrawn)
                 {
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Withdraw" asp-route-id="@item.Id">Withdraw</a>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        @if (DateTime.Today >= item.DateCreated.AddYears(item.TermYears))
+                        {
+                            <a asp-action="Withdraw" asp-route-id="@item.Id">Withdraw</a>
+                        }
+
                     </td>
                 }
                 else

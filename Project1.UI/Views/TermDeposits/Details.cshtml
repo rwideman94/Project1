@@ -51,8 +51,11 @@
 @if (!Model.Withdrawn)
 {
     <div>
-        <a asp-action="Withdraw" asp-route-id="@Model.Id">Withdraw</a> |
-        <a asp-action="Index">Back to List</a>
+        @if (DateTime.Today >= Model.DateCreated.AddYears(Model.TermYears))
+        {
+            <a asp-action="Withdraw" asp-route-id="@Model.Id">Withdraw</a>
+        }
+         <a asp-action="Index">Back to List</a>
     </div>
 }
 else

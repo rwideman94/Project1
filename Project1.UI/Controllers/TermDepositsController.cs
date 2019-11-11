@@ -89,7 +89,8 @@ namespace Project1.UI.Controllers
             }
             TDWithdrawlVM TDWVM = new TDWithdrawlVM { 
                 Accounts = await _AcctRepo.Get(UserManager.GetUserId(User)), 
-                Withdrawn = termD.Withdrawn
+                Withdrawn = termD.Withdrawn,
+                maturityDate = termD.DateCreated.AddYears(termD.TermYears)
             };
             return View(TDWVM);
         }
