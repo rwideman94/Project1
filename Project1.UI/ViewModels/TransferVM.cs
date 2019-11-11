@@ -28,6 +28,9 @@ namespace Project1.UI.ViewModels
         public int AccountIDTo { get; set; }
 
         public List<Account> Accounts { get; set; }
+        //public string AccountUserId { get; set; }
+        //[Compare(nameof(AccountUserId))]
+        //public string UserID { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

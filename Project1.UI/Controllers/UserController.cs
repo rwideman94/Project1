@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Project1.UI.ViewModels;
 using Project1.Models;
 using Microsoft.AspNetCore.Authorization;
+using Project1.Models.Repositories;
 
 namespace Project1.UI.Controllers
 {
@@ -15,12 +16,16 @@ namespace Project1.UI.Controllers
 
         private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
+        private readonly IUserRepo _UserRepo;
+        private readonly IAccountRepo _AcctRepo;
 
         public UserController(UserManager<AppUser> userManager,
-                                  SignInManager<AppUser> signInManager)
+                                  SignInManager<AppUser> signInManager, IUserRepo userRepo, IAccountRepo acctRepo)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            _UserRepo = userRepo;
+            _AcctRepo = acctRepo;
         }
 
         [AllowAnonymous]
@@ -32,7 +37,8 @@ namespace Project1.UI.Controllers
         public async Task<IActionResult> Details()
         {
             AppUser currentUser = await userManager.GetUserAsync(User);
-            return View(currentUser);
+            UserVM UVM = new UserVM { User = currentUser, Payments = _UserRepo.GetPayments(userManager.GetUserId(User))};
+            return View(UVM);
         }
 
         [HttpPost]
@@ -94,6 +100,36 @@ namespace Project1.UI.Controllers
                     return RedirectToAction("index", "home");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid Username or Password");
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> OverdraftPayment()
+        {
+            OverdraftPaymentVM opVM = new OverdraftPaymentVM { 
+                Accounts = await _AcctRepo.Get(userManager.GetUserId(User)),
+                OverdraftBalance = _UserRepo.Get(userManager.GetUserId(User)).Overdraft, };
+            return View(opVM);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> OverdraftPayment([Bind("PaymentFromAccount, Amount, AccountID")]OverdraftPaymentVM model)
+        {
+            model.AccountBalance = (await _AcctRepo.Get(model.AccountID)).Balance;
+            model.Accounts = await _AcctRepo.Get(userManager.GetUserId(User));
+            AppUser user = _UserRepo.Get(userManager.GetUserId(User));
+
+            if (ModelState.IsValid)
+            {
+                if (model.PaymentFromAccount)
+                {
+                    await _UserRepo.OverdraftPayment(user, model.Amount, model.AccountID);
+                }
+                else
+                {
+                    await _UserRepo.OverdraftPayment(user, model.Amount);
+                }
             }
             return View(model);
         }

@@ -9,6 +9,7 @@ namespace Project1.Models.BusinessLayer
         public void Withdraw(TermDeposit termDeposit)
         {
             termDeposit.Withdrawn = true;
+            termDeposit.WithdrawlDate = DateTime.Today;
         }
     }
 }

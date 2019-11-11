@@ -1,42 +1,75 @@
-﻿@model Project1.Models.Loans.Loan
+﻿@model Project1.UI.ViewModels.LoanVM
 
 @{
     ViewData["Title"] = "Details";
 }
 
 <h1>Details</h1>
-@if (Model.PaidOff)
+@if (Model.Loan.PaidOff)
 {
     <h2 class="text-danger">This Loan has already been paid off</h2>
 }
 <div>
-    <h4>Loan #@Model.Id</h4>
+    <h4>Loan #@Model.Loan.Id</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Principal)
+            @Html.DisplayNameFor(model => model.Loan.Principal)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Principal)
+            @Html.DisplayFor(model => model.Loan.Principal)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Balance)
+            @Html.DisplayNameFor(model => model.Loan.Balance)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Balance)
+            @Html.DisplayFor(model => model.Loan.Balance)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreationDate)
+            @Html.DisplayNameFor(model => model.Loan.CreationDate)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreationDate)
+            @Html.DisplayFor(model => model.Loan.CreationDate)
         </dd>
     </dl>
 </div>
-@if (!Model.PaidOff)
+<h4>Payment History</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Payment amount
+            </th>
+            <th>
+                Payment Date/Time
+            </th>
+            <th>
+                Details
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Payments)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Details)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (!Model.Loan.PaidOff)
 {
     <div>
-        <a asp-action="Payment" asp-route-id="@Model.Id">Make a Payment</a> |
+        <a asp-action="Payment" asp-route-id="@Model.Loan.Id">Make a Payment</a> |
         <a asp-action="Index">Back to List</a>
     </div>
 }

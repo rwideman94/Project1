@@ -45,19 +45,20 @@ namespace Project1.UI.Controllers
                 return NotFound();
             }
 
-            var businessAccount = await _repo.Get(id);
-            if (businessAccount == null)
+            var account = await _repo.Get(id);
+            if (account == null)
             {
                 return NotFound();
             }
             AccountVM bavm = new AccountVM
             {
-                Account = businessAccount,
+                Account = account,
                 Transactions = (await _repo.GetTransactions())
                     .Where(acct => acct.AccountID == id)
                     .Reverse()
                     .Take(10)
-                    .ToList()
+                    .ToList(),
+                AccountUserId = account.AppUserId
             };
             return View(bavm);
         }
@@ -183,7 +184,9 @@ namespace Project1.UI.Controllers
             {
 
             }
-            DepositVM depositVM = new DepositVM { Amount = 0 };
+            DepositVM depositVM = new DepositVM { 
+                Amount = 0
+            };
 
             if (account == null)
             {
@@ -197,15 +200,16 @@ namespace Project1.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deposit(int id, [Bind("Amount")] DepositVM depositVM)
         {
+            var account = await _repo.Get(id);
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _repo.Deposit(await _repo.Get(id), depositVM.Amount);
+                    await _repo.Deposit(account, depositVM.Amount);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BusinessAccountExists(id))
+                    if (!AccountExists(id))
                     {
                         return NotFound();
                     }
@@ -231,7 +235,10 @@ namespace Project1.UI.Controllers
             {
                 return NotFound();
             }
-            WithdrawlVM withdrawlVM = new WithdrawlVM { Amount = 0, Balance = account.Balance, AccountType = account.AccountType };
+            WithdrawlVM withdrawlVM = new WithdrawlVM { 
+                Amount = 0, 
+                Balance = account.Balance, 
+                AccountType = account.AccountType};
 
             return View(withdrawlVM);
         }
@@ -256,7 +263,7 @@ namespace Project1.UI.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BusinessAccountExists(id))
+                    if (!AccountExists(id))
                     {
                         return NotFound();
                     }
@@ -291,7 +298,11 @@ namespace Project1.UI.Controllers
             {
                 validAccounts.Add(item);
             }
-            return View(new TransferVM { Accounts = validAccounts, AccountIDFrom = (int)id, AccountFromBalance = account.Balance });
+            return View(new TransferVM { 
+                Accounts = validAccounts, 
+                AccountIDFrom = (int)id, 
+                AccountFromBalance = account.Balance
+            });
         }
 
         [HttpPost]
@@ -314,11 +325,11 @@ namespace Project1.UI.Controllers
                 }
                 catch
                 {
-                    if (!BusinessAccountExists(transferVM.AccountIDFrom))
+                    if (!AccountExists(transferVM.AccountIDFrom))
                     {
                         return NotFound();
                     }
-                    else if (!BusinessAccountExists(transferVM.AccountIDTo))
+                    else if (!AccountExists(transferVM.AccountIDTo))
                     {
                         return NotFound();
                     }
@@ -334,7 +345,7 @@ namespace Project1.UI.Controllers
             return View(transferVM);
         }
 
-        private bool BusinessAccountExists(int id)
+        private bool AccountExists(int id)
         {
             return _repo.AccountExists(id);
         }

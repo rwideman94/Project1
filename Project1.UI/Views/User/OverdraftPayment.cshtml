@@ -1,0 +1,94 @@
+﻿@model Project1.UI.ViewModels.OverdraftPaymentVM
+
+<h1>Withdraw</h1>
+@if (Model.OverdraftBalance != 0)
+{
+    <h3>How much would you like to pay?</h3>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="OverdraftPayment">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group form-check">
+                    <h4>You currently have overdraft charges totaling $@Model.OverdraftBalance.</h4>
+                    <input class="form-check-input" asp-for="OverdraftBalance" hidden />
+                    <br />
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="PaymentFromAccount" /> @Html.DisplayNameFor(model => model.PaymentFromAccount)
+                    </label>
+                </div>
+                <label class="form-check-label" asp-for="AccountID"></label>
+                <br />
+                <select asp-for="AccountID">
+                    @foreach (var item in Model.Accounts)
+                    {
+                        if (!item.IsClosed)
+                        {
+                            <option value="@item.Id">#@item.Id: @item.NickName - @item.Balance</option>
+                        }
+                    }
+                </select>
+                <div class="form-group">
+                    <label asp-for="Amount" class="control-label"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Make Payment" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-controller="Home" asp-action="Index">Back to Home</a>
+    </div>
+}
+else
+{
+    <h3>You don't currently owe any overdraft charges.</h3>
+    <hr />
+    <div>
+        <a asp-controller="Home" asp-action="Index">Back to Home</a>
+    </div>
+}
+
+
+@*@model Project1.UI.ViewModels.TransferVM
+
+<h1>Transfer</h1>
+<h3>@Model.AccountFromBalance currently in account #@Model.AccountIDFrom</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Transfer">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="AccountFromBalance" class="form-control" hidden />
+                <input asp-for="AccountIDFrom" class="form-control" hidden />
+            </div>
+            <label class="form-check-label" asp-for="AccountIDTo"></label>
+            <select asp-for="AccountIDTo">
+                @foreach (var item in Model.Accounts)
+                {
+                    if (!item.IsClosed)
+                    {
+                        <option value="@item.Id">#@item.Id: @item.NickName - @item.Balance</option>
+                    }
+                }
+            </select>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Transfer" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@

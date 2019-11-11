@@ -18,13 +18,16 @@ namespace Project1.UI.ViewModels
         [DataType(DataType.Currency)]
         public decimal Balance { get; set; }
         public string AccountType { get; set; }
+        //public string AccountUserId { get; set; }
+        //[Compare(nameof(AccountUserId))]
+        //public string UserID { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Amount > Balance && AccountType == "Checking")
             {
                 yield return
-                  new ValidationResult(errorMessage: "You can't transfer more than a checking account contains.",
+                  new ValidationResult(errorMessage: "You can't withdraw more than a checking account contains.",
                                        memberNames: new[] { "Amount" });
             }
         }

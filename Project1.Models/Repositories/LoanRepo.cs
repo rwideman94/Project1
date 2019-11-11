@@ -43,6 +43,11 @@ namespace Project1.Models.Repositories
             return await _context.Loans.Where(l => l.AppUserId == userId).ToListAsync();
         }
 
+        public async Task<List<LoanPayment>> GetPayments(int? id)
+        {
+            return await _context.LoanPayments.Where(lp => lp.LoanID == id).ToListAsync();
+        }
+
         public bool LoanExists(int? id)
         {
             return _context.Loans.Any(l => l.Id == id);

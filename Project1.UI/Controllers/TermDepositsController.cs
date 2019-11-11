@@ -87,7 +87,10 @@ namespace Project1.UI.Controllers
             {
                 return NotFound();
             }
-            TDWithdrawlVM TDWVM = new TDWithdrawlVM { Accounts = await _AcctRepo.Get(UserManager.GetUserId(User)), Withdrawn = termD.Withdrawn };
+            TDWithdrawlVM TDWVM = new TDWithdrawlVM { 
+                Accounts = await _AcctRepo.Get(UserManager.GetUserId(User)), 
+                Withdrawn = termD.Withdrawn
+            };
             return View(TDWVM);
         }
 

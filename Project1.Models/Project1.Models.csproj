@@ -47,6 +47,10 @@
     <Compile Remove="Migrations\TestDb\20191110161842_LoansAndTDs.Designer.cs" />
     <Compile Remove="Migrations\TestDb\20191110161948_LoansAndTDs.cs" />
     <Compile Remove="Migrations\TestDb\20191110161948_LoansAndTDs.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191111024047_OvrdrftPymntHistory.cs" />
+    <Compile Remove="Migrations\TestDb\20191111024047_OvrdrftPymntHistory.Designer.cs" />
+    <Compile Remove="Migrations\TestDb\20191111032716_LoanPaymentHistory.cs" />
+    <Compile Remove="Migrations\TestDb\20191111032716_LoanPaymentHistory.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

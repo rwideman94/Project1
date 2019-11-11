@@ -49,6 +49,9 @@ namespace Project1.UI
             services.ConfigureApplicationCookie(options => options.LoginPath = "/User/Login");
 
             services.AddTransient<IAccountRepo, AccountRepo>();
+            services.AddTransient<IUserRepo, UserRepo>();
+            services.AddTransient<ILoanRepo, LoanRepo>();
+            services.AddTransient<ITermDepositRepo, TermDepositRepo>();
 
             services.AddControllers(config =>
             {

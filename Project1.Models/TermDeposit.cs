@@ -28,5 +28,8 @@ namespace Project1.Models
         [Display(Name = "Deposit Date")]
         public DateTime DateCreated { get; set; }
         public bool Withdrawn { get; set; }
+        [DataType(DataType.Date)]
+        [Display(Name = "Withdrawl Date")]
+        public DateTime WithdrawlDate { get; set; }
     }
 }

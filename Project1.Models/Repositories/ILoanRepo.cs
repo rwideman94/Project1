@@ -11,6 +11,7 @@ namespace Project1.Models.Repositories
         Task<List<Loan>> Get();
         Task<Loan> Get(int? id);
         Task<List<Loan>> Get(string userId);
+        Task<List<LoanPayment>> GetPayments(int? Id);
         Task<bool> Add(Loan loan);
         Task<bool> Pay(Loan loan, decimal amount);
         bool LoanExists(int? id);

@@ -19,7 +19,7 @@ namespace Project1.Models.BusinessLayer
 
         public decimal Overdraft (AppUser user, Account account)
         {
-            decimal overdraft = account.Balance*account.InterestRate;
+            decimal overdraft = account.Balance*account.InterestRate*-1;
             user.Overdraft += overdraft;
             return overdraft;
         }

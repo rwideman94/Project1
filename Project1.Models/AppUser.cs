@@ -36,5 +36,6 @@ namespace Project1.Models
         public List<CheckingAccount> CAccounts { get; set; }
         public List<Loan> Loans { get; set; }
         public List<TermDeposit> TermDeposits { get; set; }
+        public List<OverdraftPaymentRecord> Payments { get; set; }
     }
 }

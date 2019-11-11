@@ -11,23 +11,16 @@
                 <input asp-for="AccountFromBalance" class="form-control" hidden />
                 <input asp-for="AccountIDFrom" class="form-control" hidden />
             </div>
-            <div>
-                Your accounts:
-                <ul>
-                    @foreach (var item in Model.Accounts)
+            <label class="form-check-label" asp-for="AccountIDTo"></label>
+            <select asp-for="AccountIDTo">
+                @foreach (var item in Model.Accounts)
+                {
+                    if (!item.IsClosed)
                     {
-                        if (!item.IsClosed)
-                        {
-                            <li>
-                                @item.AccountType account #@item.Id: @item.NickName
-                            </li>
-                        }
+                        <option value="@item.Id">#@item.Id: @item.NickName - @item.Balance</option>
                     }
-                </ul>
-            </div>
-            <label asp-for="AccountIDFrom" class="control-label"></label>
-            @Html.DropDownListFor(m => m.AccountIDTo,
-               new SelectList(Model.Accounts, "Id", "Id"), "Select account to transfer to")
+                }
+            </select>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
                 <input asp-for="Amount" class="form-control" />

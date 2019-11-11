@@ -16,10 +16,10 @@ namespace Project1.UI.Controllers
     public class LoansController : Controller
     {
         private readonly IAccountRepo _AcctRepo;
-        private readonly LoanRepo _loanRepo;
+        private readonly ILoanRepo _loanRepo;
         private readonly UserManager<AppUser> UserManager;
 
-        public LoansController(LoanRepo repo, IAccountRepo acctRepo, UserManager<AppUser> userManager)
+        public LoansController(ILoanRepo repo, IAccountRepo acctRepo, UserManager<AppUser> userManager)
         {
             _loanRepo = repo;
             UserManager = userManager;
@@ -45,8 +45,11 @@ namespace Project1.UI.Controllers
             {
                 return NotFound();
             }
-
-            return View(loan);
+            LoanVM LVM = new LoanVM { 
+                Loan = loan, 
+                Payments = await _loanRepo.GetPayments(loan.Id)
+            };
+            return View(LVM);
         }
 
         // GET: Loans/Create
@@ -84,18 +87,29 @@ namespace Project1.UI.Controllers
             {
                 return NotFound();
             }
-            LoanPaymentVM loanPaymentVM = new LoanPaymentVM { Accounts = await _AcctRepo.Get(UserManager.GetUserId(User)), PaidOff = loan.PaidOff };
+            LoanPaymentVM loanPaymentVM = new LoanPaymentVM
+            {
+                Accounts = await _AcctRepo.Get(UserManager.GetUserId(User)),
+                PaidOff = loan.PaidOff,
+                LoanBalance = loan.Balance,
+            };
             return View(loanPaymentVM);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Payment(int id, [Bind("PaymentFromAccount, AccountID, PaidOff, Amount")] LoanPaymentVM loanPaymentVM)
+        public async Task<IActionResult> Payment(int id, [Bind("PaymentFromAccount, AccountID, PaidOff, Amount, LoanBalance")] LoanPaymentVM loanPaymentVM)
         {
             Loan loan = await _loanRepo.Get(id);
             loanPaymentVM.AccountBalance = (await _AcctRepo.Get(loanPaymentVM.AccountID)).Balance;
             loanPaymentVM.Accounts = await _AcctRepo.Get(UserManager.GetUserId(User));
+            loanPaymentVM.LoanBalance = loan.Balance;
             if (ModelState.IsValid)
             {
+                if (loanPaymentVM.AccountBalance < loanPaymentVM.Amount)
+                {
+                    ModelState.AddModelError("Amount", "An account can't go negative in paying off a loan.");
+                    return View(loanPaymentVM);
+                }
                 try
                 {
                     if (loanPaymentVM.PaymentFromAccount)

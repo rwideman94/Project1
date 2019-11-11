@@ -10,6 +10,10 @@ namespace Project1.Models.BusinessLayer
         public void Payment(Loan loan, decimal amount)
         {
             loan.Balance -= amount;
+            if (loan.Balance == 0)
+            {
+                loan.PaidOff = true;
+            }
         }
     }
 }

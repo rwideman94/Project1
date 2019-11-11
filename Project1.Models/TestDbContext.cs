@@ -33,6 +33,7 @@ namespace Project1.Models
         public DbSet<Loan> Loans { get; set; }
         public DbSet<TermDeposit> TermDeposits { get; set; }
         public DbSet<LoanPayment> LoanPayments { get; set; }
+        public DbSet<OverdraftPaymentRecord> OverdraftPayments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

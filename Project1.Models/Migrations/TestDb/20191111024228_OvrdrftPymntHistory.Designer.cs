@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project1.Models;
 
 namespace Project1.Models.Migrations.TestDb
 {
     [DbContext(typeof(TestDbContext))]
-    partial class TestDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191111024228_OvrdrftPymntHistory")]
+    partial class OvrdrftPymntHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,9 +363,6 @@ namespace Project1.Models.Migrations.TestDb
 
                     b.Property<decimal>("WithdrawlAmount")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("WithdrawlDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<bool>("Withdrawn")
                         .HasColumnType("bit");
